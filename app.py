@@ -60,7 +60,8 @@ view = df[
 # -----------------------------
 # Title + KPIs
 # -----------------------------
-st.title("Predictive Maintenance Dashboard")
+st.title("Predictive Maintenance — RUL & Risk Dashboard")
+st.caption("Asset-level and fleet-level predictive maintenance using vibration features and predicted remaining useful life.")
 
 col1, col2, col3, col4 = st.columns(4)
 col1.metric("Assets Monitored", df["asset_id"].nunique())
