@@ -55,7 +55,7 @@ view = df[
 # -----------------------------
 st.title("Predictive Maintenance Dashboard")
 
-st.warning("IF YOU SEE THIS, YOU ARE RUNNING THE NEW VERSION ✅")
+# st.warning("IF YOU SEE THIS, YOU ARE RUNNING THE NEW VERSION ✅")
 
 
 col1, col2, col3, col4 = st.columns(4)
