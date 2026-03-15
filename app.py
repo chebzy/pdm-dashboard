@@ -214,6 +214,33 @@ with right:
 st.divider()
 
 # -----------------------------
+# Model Performance
+# -----------------------------
+st.subheader("Model Performance")
+
+try:
+    perf_df = load_model_performance(MODEL_PERF_FILE)
+
+    if perf_df.empty:
+        st.warning("Model performance file is empty.")
+
+    else:
+        best_model = perf_df.sort_values("MAE").iloc[0]
+
+        m1, m2, m3, m4 = st.columns(4)
+
+        m1.metric("Best Model", best_model["Model"])
+        m2.metric("MAE (days)", best_model["MAE"])
+        m3.metric("RMSE (days)", best_model["RMSE"])
+        m4.metric("R²", best_model["R2"])
+
+        st.write("### Model Comparison")
+        st.dataframe(perf_df, width="stretch")
+
+except FileNotFoundError:
+    st.info("Run model_comparison_regression.py to generate model performance results.")
+
+# -----------------------------
 # Asset drill-down
 # -----------------------------
 st.subheader("Asset Drill-Down")
