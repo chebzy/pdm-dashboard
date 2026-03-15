@@ -11,6 +11,7 @@ st.set_page_config(page_title="Predictive Maintenance Dashboard", layout="wide")
 REFRESH_SECONDS = 300
 SNAPSHOT_FILE = "latest_snapshot.csv"
 HISTORY_FILE = "dataset_full.csv"
+MODEL_PERF_FILE = "model_performance_regression.csv"
 
 # -----------------------------
 # Helpers
