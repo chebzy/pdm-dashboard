@@ -39,14 +39,12 @@ X_train, X_test, y_train, y_test = train_test_split(
 # -----------------------------
 models = {
     "Linear Regression": LinearRegression(),
-
-    "Random Forest": RandomForestRegressor(
+    "Random Forest Regressor": RandomForestRegressor(
         n_estimators=200,
         max_depth=8,
         random_state=42
     ),
-
-    "Gradient Boosting": GradientBoostingRegressor(
+    "Gradient Boosting Regressor": GradientBoostingRegressor(
         n_estimators=200,
         learning_rate=0.05,
         max_depth=3,
@@ -60,23 +58,25 @@ models = {
 results = []
 
 for name, model in models.items():
-
     model.fit(X_train, y_train)
-
     preds = model.predict(X_test)
 
     mae = mean_absolute_error(y_test, preds)
-    rmse = mean_squared_error(y_test, preds)**0.5
+    rmse = mean_squared_error(y_test, preds) ** 0.5
     r2 = r2_score(y_test, preds)
 
     results.append({
         "Model": name,
         "MAE": round(mae, 2),
         "RMSE": round(rmse, 2),
-        "R2": round(r2, 3)
+        "R2": round(r2, 3),
+        "Features": ", ".join(features)
     })
 
 results_df = pd.DataFrame(results).sort_values("MAE")
 
 print("\nRegression Model Comparison\n")
 print(results_df)
+
+# Save results for Streamlit app
+results_df.to_csv("model_performance_regression.csv", index=False)
