@@ -49,6 +49,10 @@ def load_history(path: str) -> pd.DataFrame:
 
     return hist
 
+# add a loader function for regression model comparism
+@st.cache_data
+def load_model_performance(path):
+    return pd.read_csv(path)
 
 def get_action_text(bucket: str) -> tuple[str, str]:
     b = str(bucket).upper()
