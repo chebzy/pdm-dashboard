@@ -1,0 +1,4 @@
+Model,MAE,RMSE,R2,Features
+Random Forest Regressor,28.17,46.49,0.777,"RMS, Peak_to_Peak, Crest_Factor, Kurtosis, Amp_1x, Fault_Energy"
+Gradient Boosting Regressor,29.56,47.15,0.771,"RMS, Peak_to_Peak, Crest_Factor, Kurtosis, Amp_1x, Fault_Energy"
+Linear Regression,42.31,58.96,0.642,"RMS, Peak_to_Peak, Crest_Factor, Kurtosis, Amp_1x, Fault_Energy"
