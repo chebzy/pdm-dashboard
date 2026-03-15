@@ -101,9 +101,13 @@ if df.empty:
 # Optional debug
 with st.expander("Debug: Risk bucket counts"):
     if "risk_bucket" in df.columns:
-        st.dataframe(df["risk_bucket"].value_counts().reset_index().rename(
-            columns={"index": "risk_bucket", "risk_bucket": "count"}
-        ))
+        bucket_counts_df = (
+            df["risk_bucket"]
+            .value_counts()
+            .rename_axis("risk_bucket")
+            .reset_index(name="count")
+        )
+        st.dataframe(bucket_counts_df, use_container_width=True)
     else:
         st.warning("Column 'risk_bucket' not found.")
 
