@@ -1,4 +1,4 @@
 Model,MAE,RMSE,R2,Validation_Type,Train_Day_Max,Test_Day_Min,Features
-Random Forest Regressor,1.4,2.57,0.953,Time-based split,292,293,"RMS, Peak_to_Peak, Crest_Factor, Kurtosis, Amp_1x, Fault_Energy, RMS_change, Kurtosis_change, FaultEnergy_change, RMS_roll5, Kurtosis_roll5, FaultEnergy_roll5"
+Random Forest Regressor,1.41,2.57,0.953,Time-based split,292,293,"RMS, Peak_to_Peak, Crest_Factor, Kurtosis, Amp_1x, Fault_Energy, RMS_change, Kurtosis_change, FaultEnergy_change, RMS_roll5, Kurtosis_roll5, FaultEnergy_roll5"
 Gradient Boosting Regressor,2.84,3.65,0.905,Time-based split,292,293,"RMS, Peak_to_Peak, Crest_Factor, Kurtosis, Amp_1x, Fault_Energy, RMS_change, Kurtosis_change, FaultEnergy_change, RMS_roll5, Kurtosis_roll5, FaultEnergy_roll5"
 Linear Regression,23.56,31.69,-6.169,Time-based split,292,293,"RMS, Peak_to_Peak, Crest_Factor, Kurtosis, Amp_1x, Fault_Energy, RMS_change, Kurtosis_change, FaultEnergy_change, RMS_roll5, Kurtosis_roll5, FaultEnergy_roll5"

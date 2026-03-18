@@ -11,7 +11,9 @@ st.set_page_config(page_title="Predictive Maintenance Dashboard", layout="wide")
 REFRESH_SECONDS = 300
 SNAPSHOT_FILE = "latest_snapshot.csv"
 HISTORY_FILE = "dataset_full.csv"
-MODEL_PERF_FILE = "model_performance_regression.csv"
+
+MODEL_PERF_TIME_FILE = "model_performance_regression.csv"
+MODEL_PERF_ASSET_FILE = "model_performance_regression_asset_split.csv"
 
 # -----------------------------
 # Helpers
@@ -237,31 +239,105 @@ st.divider()
 # -----------------------------
 # Model Performance
 # -----------------------------
-st.subheader("Model Performance")
+st.subheader("Model Validation Performance")
+
+perf_time_df = pd.DataFrame()
+perf_asset_df = pd.DataFrame()
+
+time_error = None
+asset_error = None
 
 try:
-    perf_df = load_model_performance(MODEL_PERF_FILE)
-
-    if perf_df.empty:
-        st.warning("Model performance file is empty.")
-    else:
-        best_model = perf_df.sort_values("MAE").iloc[0]
-
-        m1, m2, m3, m4 = st.columns(4)
-        m1.metric("Best Model", best_model["Model"])
-        m2.metric("MAE (days)", best_model["MAE"])
-        m3.metric("RMSE (days)", best_model["RMSE"])
-        m4.metric("R²", best_model["R2"])
-
-        st.write("### Model Comparison")
-        st.dataframe(perf_df, width="stretch")
-
+    perf_time_df = load_model_performance(MODEL_PERF_TIME_FILE)
 except FileNotFoundError:
-    st.info("Run train_rul_model.py to generate model_performance_regression.csv.")
+    time_error = f"Missing file: {MODEL_PERF_TIME_FILE}"
 except Exception as e:
-    st.warning(f"Could not load model performance data: {e}")
+    time_error = f"Could not load {MODEL_PERF_TIME_FILE}: {e}"
 
-st.divider()
+try:
+    perf_asset_df = load_model_performance(MODEL_PERF_ASSET_FILE)
+except FileNotFoundError:
+    asset_error = f"Missing file: {MODEL_PERF_ASSET_FILE}"
+except Exception as e:
+    asset_error = f"Could not load {MODEL_PERF_ASSET_FILE}: {e}"
+
+if perf_time_df.empty and perf_asset_df.empty:
+    st.info("No model performance files found yet. Run the training scripts first.")
+else:
+    if not perf_time_df.empty:
+        best_time = perf_time_df.sort_values("MAE").iloc[0]
+
+        st.write("### Time-Based Validation")
+        st.caption("Forecasting future days for assets already seen during training.")
+
+        t1, t2, t3, t4 = st.columns(4)
+        t1.metric("Best Model", best_time["Model"])
+        t2.metric("MAE (days)", best_time["MAE"])
+        t3.metric("RMSE (days)", best_time["RMSE"])
+        t4.metric("R²", best_time["R2"])
+
+        st.dataframe(perf_time_df, width="stretch")
+    elif time_error:
+        st.warning(time_error)
+
+    st.divider()
+
+    if not perf_asset_df.empty:
+        best_asset = perf_asset_df.sort_values("MAE").iloc[0]
+
+        st.write("### Asset-Based Validation")
+        st.caption("Testing generalization on assets not seen during training.")
+
+        a1, a2, a3, a4 = st.columns(4)
+        a1.metric("Best Model", best_asset["Model"])
+        a2.metric("MAE (days)", best_asset["MAE"])
+        a3.metric("RMSE (days)", best_asset["RMSE"])
+        a4.metric("R²", best_asset["R2"])
+
+        st.dataframe(perf_asset_df, width="stretch")
+    elif asset_error:
+        st.warning(asset_error)
+
+    st.divider()
+
+    if (not perf_time_df.empty) and (not perf_asset_df.empty):
+        best_time = perf_time_df.sort_values("MAE").iloc[0]
+        best_asset = perf_asset_df.sort_values("MAE").iloc[0]
+
+        st.write("### Validation Comparison")
+
+        compare_df = pd.DataFrame([
+            {
+                "Validation": "Time-based",
+                "Best_Model": best_time["Model"],
+                "MAE": best_time["MAE"],
+                "RMSE": best_time["RMSE"],
+                "R2": best_time["R2"],
+                "Meaning": "Future prediction for known assets",
+            },
+            {
+                "Validation": "Asset-based",
+                "Best_Model": best_asset["Model"],
+                "MAE": best_asset["MAE"],
+                "RMSE": best_asset["RMSE"],
+                "R2": best_asset["R2"],
+                "Meaning": "Generalization to unseen assets",
+            },
+        ])
+
+        st.dataframe(compare_df, width="stretch")
+
+        try:
+            time_mae = float(best_time["MAE"])
+            asset_mae = float(best_asset["MAE"])
+
+            if asset_mae > time_mae:
+                st.info(
+                    f"Generalization is harder than forecasting known assets: "
+                    f"time-based MAE = {time_mae:.2f} days vs asset-based MAE = {asset_mae:.2f} days."
+                )
+        except Exception:
+            pass
 
 # -----------------------------
 # Asset drill-down
