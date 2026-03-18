@@ -65,7 +65,7 @@ def main() -> None:
     ]
     target = "days_to_failure"
 
-    df_model = df[["day"] + features + [target]].dropna().sort_values("day")
+    df_model = df[["asset_id", "day"] + features + [target]].dropna().sort_values(["asset_id", "day"])
 
     split_day = int(df_model["day"].quantile(0.8))
     train_df = df_model[df_model["day"] <= split_day].copy()

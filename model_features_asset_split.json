@@ -1,0 +1,14 @@
+[
+  "RMS",
+  "Peak_to_Peak",
+  "Crest_Factor",
+  "Kurtosis",
+  "Amp_1x",
+  "Fault_Energy",
+  "RMS_change",
+  "Kurtosis_change",
+  "FaultEnergy_change",
+  "RMS_roll5",
+  "Kurtosis_roll5",
+  "FaultEnergy_roll5"
+]
